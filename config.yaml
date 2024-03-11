@@ -1,0 +1,17 @@
+##### UnaRL-DRL Config #####
+---
+##### DQN #####
+BATCH_SIZE : 32
+GAMMA : 0.99
+EPS_START : 1.0
+EPS_END : 0.05
+EPS_DECAY : 100
+MAX_NUM_EPOC : 300
+MAX_NUM_STEPS : 200
+DECISION_VARIABLE : 4
+
+##### Environment ######
+AGENT_ID : 'Agent_1'
+env_name : 'leftturn' #'merge'
+screen_size : 120
+view : 50
