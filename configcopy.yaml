@@ -18,11 +18,11 @@ MAX_NUM_STEPS : 200
 PLOT_INTERVAL : 10
 SAVE_INTERVAL : 20
 DECISION_VARIABLE : 4
-EVALUATION_EPOC : 104
+EVALUATION_EPOC : 10
 
 ##### Environment ######
 AGENT_ID : 'Pianist'
-env_name : 'LeftTurnCopy' #'merge'
+env_name : 'Roundabout' #'merge'
 screen_size : 120
 view : 50
 

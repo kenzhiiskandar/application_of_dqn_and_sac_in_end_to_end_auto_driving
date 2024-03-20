@@ -53,7 +53,7 @@ class SAC():
         self.actor_lr = 1e-3
         self.critic_lr = 1e-2
         self.alpha_lr = 1e-2
-        self.target_entropy = -1
+        self.target_entropy = 0.01
         
         self.lr_p = 0.0001
         self.eps = 0.01
@@ -64,7 +64,6 @@ class SAC():
         self.loss_engage_q = 0.0
         self.eps_threshold = 0.0
         self.q = 0.0
-        self.target_entropy_ratio = 0.3
 
         self.q_policy = np.zeros(self.n_actions)
         self.q_target = np.zeros(self.n_actions)
@@ -160,13 +159,13 @@ class SAC():
     def calc_td_target(self, rewards, next_states, dones):
         next_probs = self.actor_net(next_states)
         next_log_probs = torch.log(next_probs + 1e-8)
-        entropy = -torch.sum(next_probs * next_log_probs, dim=1, keepdim=True)
+        #entropy = -torch.sum(next_probs * next_log_probs, dim=1, keepdim=True)
         q1_value = self.target_critic_1_net(next_states)
         q2_value = self.target_critic_2_net(next_states)
         min_qvalue = torch.sum(next_probs * torch.min(q1_value, q2_value),
                                dim=1,
                                keepdim=True)
-        next_value = min_qvalue + self.log_alpha.exp() * entropy
+        next_value = min_qvalue + self.log_alpha.exp() #* entropy
         td_target = rewards + self.gamma * next_value * (1 - dones)
         return td_target
     

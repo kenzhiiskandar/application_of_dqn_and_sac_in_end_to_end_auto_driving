@@ -17,6 +17,7 @@ from tqdm import tqdm
 from itertools import count
 from collections import deque
 import matplotlib.pyplot as plt
+import time
 
 sys.path.append('/home/kenzhi/SMARTS')
 #from smarts.core.agent import AgentSpec
@@ -25,6 +26,9 @@ from smarts.env.hiway_env import HiWayEnv
 from smarts.core.controllers import ActionSpaceType
 from smarts.core.agent_interface import AgentInterface
 from smarts.core.agent_interface import NeighborhoodVehicles, RGB, OGM, DrivableAreaGridMap
+
+from smarts import sstudio
+import pathlib
 
 from DQNcopy import DQN
 from SAC import SAC
@@ -43,12 +47,14 @@ def plot_animation_figure():
     plt.pause(10)
     plt.tight_layout()
     plt.show()
+    plt.savefig("outputRASAC.jpg")
 
 def preprocess(s, a, r, s_):
     state = s
     next_state  = s_
     action = a.cpu().numpy().squeeze().astype(np.int32)
     reward = np.float32(r)
+
     
     return state, action, reward, next_state
 
@@ -103,6 +109,7 @@ def evaluate(network, eval_episodes=10, epoch=0):
        
             if done:
                 if info[AGENT_ID]['env_obs'].events.reached_goal:
+                #if bool(len(info[AGENT_ID]['env_obs'].events.collisions)) == False:    
                     success += 1
                 
                 print('\n|=== EVALUATION ===',
@@ -111,6 +118,7 @@ def evaluate(network, eval_episodes=10, epoch=0):
                       '\n|Collision:', bool(len(info[AGENT_ID]['env_obs'].events.collisions)),
                       '\n|Off Road:', info[AGENT_ID]['env_obs'].events.off_road,
                       '\n|Goal:', info[AGENT_ID]['env_obs'].events.reached_goal,
+                      #'\n|Goal:', bool(not(len(info[AGENT_ID]['env_obs'].events.collisions))),
                       '\n|Off Route:', info[AGENT_ID]['env_obs'].events.off_route,
                       '\n|Reward Total:', reward_total,
                       '\n|Algo:', name,
@@ -133,7 +141,28 @@ def evaluate(network, eval_episodes=10, epoch=0):
 # observation space
 def observation_adapter(env_obs):
     global states
-    new_obs = env_obs.top_down_rgb[1] # / 255.0
+    #print(env_obs, "env_obs")
+    np.set_printoptions(threshold=sys.maxsize)
+    new_obs = env_obs.top_down_rgb[1]   #/255.0
+    #
+    #print("new_obs", len(new_obs))
+    
+    # for i in range(len(new_obs)):
+    #     for j in range(len(new_obs[i])):
+    #         for k in range(len(new_obs[i][j])):
+    #             print("k", k)
+    #             print(new_obs[i][j])
+    #             if new_obs[i][j][k] != 0.0:
+    #                 print("obseravtion is not 0 0 0")
+    #                 plt.imshow(new_obs)
+    #                 time.sleep(2)
+    #                 plt.close()
+    
+    #new_obs = env_obs.occupancy_grid_map[1]
+    #print(new_obs, "new_obs")
+    #plt.imshow(new_obs)
+    #time.sleep(5)
+    #plt.close()
     states[:, :, 0:3] = states[:, :, 3:6]
     states[:, :, 3:6] = states[:, :, 6:9]
     states[:, :, 6:9] = new_obs
@@ -148,12 +177,13 @@ def observation_adapter(env_obs):
 # reward function
 def reward_adapter(env_obs, action, done, engage=False):
     ego_obs = env_obs.ego_vehicle_state
-    ego_lat_error = ego_obs.lane_position.t
+    #ego_lat_error = ego_obs.lane_position.t
     ego_speed = env_obs.ego_vehicle_state.speed
     lane_name = ego_obs.lane_id
     lane_id = ego_obs.lane_index
 
-    if env_name == 'merge':
+    '''
+    if env_name == 'Merge':
         if lane_name == 'gneE6_0' and action > 1:
         # if lane_name == 'gneE6_0' and action == 2:
             off_road = - 1.0
@@ -191,13 +221,13 @@ def reward_adapter(env_obs, action, done, engage=False):
         else:
             off_road = 0.0
         
-        heuristic = ego_speed * 0.002 if ego_speed > 2.0 else - 0.05
+        heuristic = ego_speed * 0.002 if ego_speed > 2.0 else - 0.05'''
         
-    else:
-        off_road = 0.0
-        target_lane = 0.0
-        heuristic = env_obs.ego_vehicle_state.speed * 0.002
-
+    #else:
+    off_road = 0.0
+    target_lane = 0.0
+    heuristic = env_obs.ego_vehicle_state.speed * 0.002
+    
     if done:
         if env_obs.events.reached_goal:
             print('\n Goal')
@@ -206,6 +236,11 @@ def reward_adapter(env_obs, action, done, engage=False):
             goal = -2.0
     else:
         goal = 0.0
+    '''
+    if (done) and (not(env_obs.events.collisions)):
+        goal = 4.0 #2.0
+    else:
+        goal =0'''
 
     if env_obs.events.collisions:
         print('\n crashed')
@@ -221,11 +256,14 @@ def reward_adapter(env_obs, action, done, engage=False):
         
     #if action > 0:
     if action > 0:
-        penalty = -0.002
+        penalty = -0.05
     else:
         penalty = 0.0
 
-    return heuristic + off_road + goal + crash + performance + penalty
+    time_taken = -0.05
+
+    return heuristic + off_road + goal + crash + performance + penalty + time_taken
+    #return heuristic + off_road + goal + crash + performance + penalty + time_taken
 
 # action space
 def action_adapter(model_action): 
@@ -271,6 +309,7 @@ def interaction(COUNTER):
                 action = {AGENT_ID:action_adapter(a)}
                 engage = int(0)
                 next_state, reward, done, info = env.step(action)
+                #print("next_state", next_state)
                 s_ = observation_adapter(next_state[AGENT_ID])
                 done = done[AGENT_ID]
                 r = reward_adapter(next_state[AGENT_ID], a, done, engage)
@@ -286,6 +325,11 @@ def interaction(COUNTER):
             ##### Interaction #####
             action = {AGENT_ID:action_adapter(a)}
             next_state, reward, done, info = env.step(action)
+            
+            #plt.imshow(next_state[AGENT_ID].top_down_rgb[1])
+            #plt.show()
+            # time.sleep(0.2)
+            
             s_ = observation_adapter(next_state[AGENT_ID])
             done = done[AGENT_ID]
             r = reward_adapter(next_state[AGENT_ID], a, done, engage)
@@ -316,6 +360,9 @@ def interaction(COUNTER):
                 if info[AGENT_ID]['env_obs'].events.reached_goal:
                     goal_counter += 1
                     print("Reached Goal! Goal_Counter:", goal_counter, " Epoc:", epoc)
+                '''if bool(len(info[AGENT_ID]['env_obs'].events.collisions)) == False:
+                    goal_counter += 1
+                    print("Reached Goal! Goal_Counter:", goal_counter, " Epoc:", epoc)'''
 
                 reward_list.append(reward_total)
                 reward_mean_list.append(np.mean(reward_list[-20:]))
@@ -334,10 +381,12 @@ def interaction(COUNTER):
                                   + str(seed)+'_' + str(agent.lr_p)+'_'+env_name+'_policynet.pkl'))
                         save_threshold = avg_reward
 
-                print('\n|Epoc:', epoc,
+                print('\n|',
+                      '\n|Epoc:', epoc,
                       '\n|Step:', t,
                       '\n|Goal Rate:', goal_list[-1],
                       '\n|Goal:', info[AGENT_ID]['env_obs'].events.reached_goal,
+                      #'\n|Goal:', bool(not(len(info[AGENT_ID]['env_obs'].events.collisions))),
                       '\n|Collision:', bool(len(info[AGENT_ID]['env_obs'].events.collisions)),
                       '\n|Off Road:', info[AGENT_ID]['env_obs'].events.off_road,
                       '\n|Off Route:', info[AGENT_ID]['env_obs'].events.off_route,
@@ -384,7 +433,7 @@ if __name__ == "__main__":
         config = yaml.load(f, Loader=yaml.FullLoader)
 
     ##### Individual parameters for each model ######f
-    mode = 'DQN'
+    mode = 'SAC'
     mode_param = config[mode]
     name = mode_param['name']
 
@@ -413,8 +462,14 @@ if __name__ == "__main__":
 
     if env_name == 'LeftTurn':
         scenario = 'LeftTurn'
-    elif env_name == 'LeftTurnCopy':
-        scenario = 'LeftTurnCopy'
+    elif env_name == 'Test':
+        scenario = 'Test'
+    elif env_name == 'loop':
+        scenario = 'loop'
+    elif env_name == 'Roundabout':
+        scenario = 'Roundabout'
+    elif env_name == 'Intersection':
+        scenario = 'Intersection'
     else:
         scenario = 'RampMerge'
 
@@ -423,6 +478,16 @@ if __name__ == "__main__":
 
     if not os.path.exists("./trained_network/" + scenario):
         os.makedirs("./trained_network/" + scenario)
+    '''
+    scenarios = [
+        str(
+            pathlib.Path(__file__).absolute().parents[1]
+            / "Scenario"
+            / "LeftTurn"
+            )
+        ]
+
+    sstudio.build_scenario(scenario=scenarios)'''
 
     screen_size = config['screen_size']
     view = config['view']
@@ -446,7 +511,7 @@ if __name__ == "__main__":
         interface=agent_interface
     )
     legend_bar = []
-    seed_list = [97,98,99]
+    seed_list = [0,97,98,99]
     ##### Train #####
     #for i in range(0, 3):
     #for i in range (0,1):
@@ -460,8 +525,10 @@ if __name__ == "__main__":
 
     ##### Create Env ######
     scenario_path = ['Scenario/' + str(scenario)]
+    #env = HiWayEnv(scenarios=scenario_path, agent_specs={AGENT_ID: agent_spec},
+    #            headless=False, visdom=False, sumo_headless=True, seed=seed)
     env = HiWayEnv(scenarios=scenario_path, agent_specs={AGENT_ID: agent_spec},
-                headless=False, visdom=False, sumo_headless=True, seed=seed)
+                headless=False, visdom=False, sumo_headless=False,)
     env.observation_space = OBSERVATION_SPACE
     env.action_space = ACTION_SPACE
     env.agent_id = AGENT_ID
@@ -471,6 +538,7 @@ if __name__ == "__main__":
     n_actions = env.action_space.n
 
     # create RL agent"
+    
     if name == "dqn":
         agent = DQN(img_h, img_w, channel, n_obs, n_actions,
                     IMPORTANTSAMPLING, ENTROPY, BATCH_SIZE,
@@ -481,6 +549,7 @@ if __name__ == "__main__":
                     GAMMA, EPS_START, EPS_END, EPS_DECAY, THRESHOLD, MEMORY_CAPACITY, seed)
     else:
         print("Agent ",name," is not detected.")
+
 
     legend_bar.append('seed'+str(seed))
 

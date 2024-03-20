@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- generated on 2024-03-16 15:25:53 by Eclipse SUMO duarouter Version 1.10.0
+<configuration xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/duarouterConfiguration.xsd">
+
+    <input>
+        <net-file value="./map.net.xml"/>
+        <route-files value="/tmp/tmpf1ibps7g/trips.trips.xml"/>
+    </input>
+
+    <output>
+        <output-file value="./traffic/basic.rou.xml"/>
+        <alternatives-output value="./traffic/basic.rou.alt.xml"/>
+    </output>
+
+    <processing>
+        <unsorted-input value="true"/>
+        <repair value="true"/>
+    </processing>
+
+    <report>
+        <error-log value="/home/kenzhi/.smarts/_duarouter_routing/traffic/basic.log"/>
+        <no-step-log value="true"/>
+    </report>
+
+    <random_number>
+        <seed value="42"/>
+    </random_number>
+
+</configuration>
+-->
+
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="http://sumo.dlr.de/xsd/routes_file.xsd">
+    <vType id="actor-car-7720678261303803176" minGap="2.50" maxSpeed="55.50" speedFactor="normc(0.50,0.80,0.20,2.00)" vClass="passenger" accel="2.6" decel="4.5" sigma="0.5"/>
+    <vehicle id="car-flow-route-445633931_0_random-445633932_0_max--8872063773308225556---2130553413876864870--endless-2-0.0" type="actor-car-7720678261303803176" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vType id="actor-car--7955802663586360631" minGap="2.50" maxSpeed="55.50" speedFactor="normc(0.50,0.80,0.20,2.00)" vClass="truck" accel="2.6" decel="4.5" sigma="0.5"/>
+    <vehicle id="car-flow-route-445633931_0_random-445633932_0_max--8872063773308225556---5481682861420388098--endless-6-0.0" type="actor-car--7955802663586360631" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633931_0_random-445633932_1_max-891325307257049221---2130553413876864870--endless-14-0.0" type="actor-car-7720678261303803176" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="1" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vType id="actor-car--5285663789954279554" minGap="2.50" maxSpeed="55.50" speedFactor="normc(0.50,0.80,0.20,2.00)" vClass="trailer" accel="2.6" decel="4.5" sigma="0.5"/>
+    <vehicle id="car-flow-route-445633931_0_random-445633932_2_max--2082300147797710537---3925330266029679230--endless-4-0.0" type="actor-car--5285663789954279554" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="2" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633931_0_random-445633932_2_max--2082300147797710537---5481682861420388098--endless-8-0.0" type="actor-car--7955802663586360631" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="2" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vType id="actor-car--5199427234571926441" minGap="2.50" maxSpeed="55.50" speedFactor="normc(0.50,0.80,0.20,2.00)" vClass="bus" accel="2.6" decel="4.5" sigma="0.5"/>
+    <vehicle id="car-flow-route-445633931_0_random-445633932_2_max--2082300147797710537--2338792407115996549--endless-18-0.0" type="actor-car--5199427234571926441" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="2" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633931_1_random-445633932_0_max-2891830898934547453---3925330266029679230--endless-16-0.0" type="actor-car--5285663789954279554" depart="0.00" departLane="1" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vType id="actor-car--5651389061928075463" minGap="2.50" maxSpeed="55.50" speedFactor="normc(0.50,0.80,0.20,2.00)" vClass="coach" accel="2.6" decel="4.5" sigma="0.5"/>
+    <vehicle id="car-flow-route-445633931_1_random-445633932_0_max-2891830898934547453---4408281014321500977--endless-22-0.0" type="actor-car--5651389061928075463" depart="0.00" departLane="1" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633931_1_random-445633932_1_max--5537141899783705985---4408281014321500977--endless-12-0.0" type="actor-car--5651389061928075463" depart="0.00" departLane="1" departPos="random" departSpeed="max" arrivalLane="1" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633931_2_random-445633932_0_max-6765479504201222794---2130553413876864870--endless-0-0.0" type="actor-car-7720678261303803176" depart="0.00" departLane="2" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633931_2_random-445633932_0_max-6765479504201222794---2130553413876864870--endless-20-0.0" type="actor-car-7720678261303803176" depart="0.00" departLane="2" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633931_2_random-445633932_1_max--3907184823999348734---2130553413876864870--endless-10-0.0" type="actor-car-7720678261303803176" depart="0.00" departLane="2" departPos="random" departSpeed="max" arrivalLane="1" arrivalPos="max">
+        <route edges="445633931 445633932"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_0_random-445633931_0_max-879489216878698016---2130553413876864870--endless-5-0.0" type="actor-car-7720678261303803176" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_0_random-445633931_1_max--5226483183952079403---2130553413876864870--endless-13-0.0" type="actor-car-7720678261303803176" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="1" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_0_random-445633931_1_max--5226483183952079403--2338792407115996549--endless-23-0.0" type="actor-car--5199427234571926441" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="1" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_0_random-445633931_2_max-3796886287426974533---3925330266029679230--endless-11-0.0" type="actor-car--5285663789954279554" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="2" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_0_random-445633931_2_max-3796886287426974533---4408281014321500977--endless-21-0.0" type="actor-car--5651389061928075463" depart="0.00" departLane="0" departPos="random" departSpeed="max" arrivalLane="2" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_1_random-445633931_0_max-2182261526775445995---3925330266029679230--endless-9-0.0" type="actor-car--5285663789954279554" depart="0.00" departLane="1" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_1_random-445633931_1_max-5471698329343405957---5481682861420388098--endless-15-0.0" type="actor-car--7955802663586360631" depart="0.00" departLane="1" departPos="random" departSpeed="max" arrivalLane="1" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_2_random-445633931_0_max--7779908317845345820---3925330266029679230--endless-17-0.0" type="actor-car--5285663789954279554" depart="0.00" departLane="2" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_2_random-445633931_0_max--7779908317845345820---5481682861420388098--endless-7-0.0" type="actor-car--7955802663586360631" depart="0.00" departLane="2" departPos="random" departSpeed="max" arrivalLane="0" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_2_random-445633931_1_max-4902668722524336636---4408281014321500977--endless-1-0.0" type="actor-car--5651389061928075463" depart="0.00" departLane="2" departPos="random" departSpeed="max" arrivalLane="1" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_2_random-445633931_2_max--129613022364096549---5481682861420388098--endless-3-0.0" type="actor-car--7955802663586360631" depart="0.00" departLane="2" departPos="random" departSpeed="max" arrivalLane="2" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+    <vehicle id="car-flow-route-445633932_2_random-445633931_2_max--129613022364096549--2338792407115996549--endless-19-0.0" type="actor-car--5199427234571926441" depart="0.00" departLane="2" departPos="random" departSpeed="max" arrivalLane="2" arrivalPos="max">
+        <route edges="445633932 445633931"/>
+    </vehicle>
+</routes>
